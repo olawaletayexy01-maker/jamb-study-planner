@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'jamb-planner-v3-practice-2026-10';
+const CACHE_VERSION = 'jamb-planner-v4-bank-2026-10';
 const APP_SHELL = ['./', './index.html', './styles.css', './app.js', './syllabus.js', './questions.js', './manifest.json', './icon.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_VERSION).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));

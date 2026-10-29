@@ -15,11 +15,11 @@ The official syllabus documents and wording are JAMB materials. This project lin
 
 ## Practice question bank
 
-`questions.js` contains 60 original practice questions, with 5 MCQs each for these 12 topics:
+`questions.js` contains 520 original practice questions, with 5 MCQs for each of the 104 syllabus topics. All topics are covered:
 
-- English Language: Synonyms; Mood, tense, aspect, number and agreement/concord; Vowels: monophthongs, diphthongs and triphthongs.
-- Mathematics: Approximations, percentages, interest, profit and loss, shares and VAT; Simultaneous equations: linear pairs and one linear with one quadratic; Probability: experimental, addition and multiplication rules.
-- Physics: Measurements and Units; Motion: Newton’s laws, linear and relative motion, projectiles, circular motion and simple harmonic motion; Work, Energy and Power; Energy and Society.
-- Chemistry: Separation of Mixtures and Purification of Chemical Substances; Atomic Structure and Bonding; Acids, Bases and Salts.
+- English Language: 20 of 20 topics (100 questions).
+- Mathematics: 27 of 27 topics (135 questions).
+- Physics: 40 of 40 topics (200 questions).
+- Chemistry: 17 of 17 topics (85 questions).
 
-All other syllabus topics currently have no question set. A topic displays a Practice button only after it is marked studied and only when it has at least five questions. The quizzes are original topic-aligned practice written for this app, not official JAMB past questions and not copied from JAMB materials. Questions target core topic concepts, and are not a substitute for the full syllabus or exam-preparation materials.
+Topic keys in `questions.js` use each subject's section and topic indexes from `syllabus.js`. The quizzes are original topic-aligned practice written for this app, not official JAMB past questions and not copied from JAMB materials. Questions target core topic concepts, and are not a substitute for the full syllabus or exam-preparation materials. A topic displays a Practice button only after it is marked studied and has its five-question set.
