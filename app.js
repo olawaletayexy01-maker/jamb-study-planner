@@ -3,15 +3,16 @@ const todayISO = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
-const defaultState = () => ({ checked: {}, target: 2, studyLog: {}, lastStudyDates: {} });
+const defaultState = () => ({ checked: {}, target: 2, studyLog: {}, lastStudyDates: {}, bestScores: {} });
 let state;
 try { state = { ...defaultState(), ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') }; }
 catch { state = defaultState(); }
-state.checked ||= {}; state.studyLog ||= {}; state.lastStudyDates ||= {};
+state.checked ||= {}; state.studyLog ||= {}; state.lastStudyDates ||= {}; state.bestScores ||= {};
 let activeSubject = null;
+let activeQuiz = null;
 let toastTimer;
 const $ = selector => document.querySelector(selector);
-const views = { home: $('#home-view'), subject: $('#subject-view'), settings: $('#settings-view') };
+const views = { home: $('#home-view'), subject: $('#subject-view'), quiz: $('#quiz-view'), settings: $('#settings-view') };
 const icons = { english: 'Aa', mathematics: '∑', physics: 'ϟ', chemistry: '⚗' };
 const topicRows = subject => subject.sections.flatMap((section, sectionIndex) => section.topics.map((topic, topicIndex) => ({ section: section.name, topic, id: `${sectionIndex}-${topicIndex}` })));
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
@@ -83,6 +84,14 @@ function openSubject(key) {
       const visual = document.createElement('span'); visual.className = 'custom-check'; visual.setAttribute('aria-hidden', 'true');
       const text = document.createElement('span'); text.className = 'topic-text'; text.textContent = topic;
       label.append(box, visual, text); wrap.append(label);
+      if (state.bestScores[`${key}:${id}`] !== undefined) {
+        const score = document.createElement('span'); score.className = 'topic-best-score';
+        score.textContent = `Best: ${state.bestScores[`${key}:${id}`]}/5`; score.setAttribute('aria-label', `Best practice score ${state.bestScores[`${key}:${id}`]} out of 5`); wrap.append(score);
+      }
+      if (box.checked && window.JAMB_QUESTIONS[`${key}:${id}`]?.length >= 5) {
+        const practice = document.createElement('button'); practice.type = 'button'; practice.className = 'practice-button'; practice.textContent = 'Practice';
+        practice.setAttribute('aria-label', `Practice questions for ${topic}`); practice.addEventListener('click', () => startQuiz(key, id)); wrap.append(practice);
+      }
       box.addEventListener('change', () => toggleTopic(key, id, box.checked));
     });
     list.append(wrap);
@@ -100,8 +109,53 @@ function toggleTopic(key, id, checked) {
   const days = streak(key); $('#subject-streak').innerHTML = `${days} <small>${days === 1 ? 'day' : 'days'}</small>`;
   $('#subject-progress-fill').style.width = `${percent}%`; $('.progress-track').setAttribute('aria-valuenow', percent);
   showToast(checked ? 'Topic marked as studied' : 'Topic unchecked');
+  openSubject(key);
 }
 function showToast(message) { const toast = $('#toast'); toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1800); }
+function startQuiz(key, id) {
+  const questions = window.JAMB_QUESTIONS[`${key}:${id}`];
+  if (!questions || questions.length < 5) return;
+  const row = topicRows(window.JAMB_SYLLABUS[key]).find(item => item.id === id);
+  activeQuiz = { key, id, topic: row.topic, questions: questions.slice(0, 5), index: 0, score: 0, answered: false };
+  $('#quiz-title').textContent = row.topic;
+  $('#quiz-topic-label').textContent = `${window.JAMB_SYLLABUS[key].name.toUpperCase()} · PRACTICE`;
+  renderQuizQuestion(); switchView('quiz');
+}
+function renderQuizQuestion() {
+  const quiz = activeQuiz, host = $('#quiz-content'); host.innerHTML = '';
+  if (quiz.index >= quiz.questions.length) {
+    const result = document.createElement('div'); result.className = 'quiz-result';
+    const heading = document.createElement('h2'); heading.textContent = `You scored ${quiz.score} out of ${quiz.questions.length}`;
+    const previous = state.bestScores[`${quiz.key}:${quiz.id}`] ?? 0;
+    const best = Math.max(previous, quiz.score); state.bestScores[`${quiz.key}:${quiz.id}`] = best; save();
+    const note = document.createElement('p'); note.textContent = quiz.score >= previous ? `New best score: ${best}/5` : `Best score: ${best}/5`;
+    const retake = document.createElement('button'); retake.type = 'button'; retake.className = 'quiz-next'; retake.textContent = 'Retake quiz'; retake.addEventListener('click', () => startQuiz(quiz.key, quiz.id));
+    const back = document.createElement('button'); back.type = 'button'; back.className = 'quiz-secondary'; back.textContent = 'Back to topics'; back.addEventListener('click', () => openSubject(quiz.key));
+    result.append(heading, note, retake, back); host.append(result); return;
+  }
+  const question = quiz.questions[quiz.index];
+  const count = document.createElement('p'); count.className = 'quiz-count'; count.textContent = `Question ${quiz.index + 1} of ${quiz.questions.length}`;
+  const prompt = document.createElement('h2'); prompt.className = 'quiz-prompt'; prompt.textContent = question.prompt;
+  const options = document.createElement('div'); options.className = 'quiz-options';
+  const feedback = document.createElement('p'); feedback.className = 'quiz-feedback'; feedback.setAttribute('role', 'status');
+  question.options.forEach((option, index) => {
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'quiz-option'; button.textContent = option;
+    button.addEventListener('click', () => {
+      if (quiz.answered) return;
+      quiz.answered = true;
+      const correct = index === question.answer; if (correct) quiz.score++;
+      button.classList.add(correct ? 'correct' : 'incorrect');
+      if (!correct) options.children[question.answer].classList.add('correct');
+      feedback.textContent = correct ? 'Correct.' : `Not quite. The correct answer is: ${question.options[question.answer]}`;
+      next.disabled = false;
+    });
+    options.append(button);
+  });
+  const next = document.createElement('button'); next.type = 'button'; next.className = 'quiz-next'; next.textContent = quiz.index === quiz.questions.length - 1 ? 'See score' : 'Next question'; next.disabled = true;
+  next.addEventListener('click', () => { quiz.index++; quiz.answered = false; renderQuizQuestion(); });
+  host.append(count, prompt, options, feedback, next);
+}
+$('#quiz-back').addEventListener('click', () => openSubject(activeQuiz.key));
 $('#back-home').addEventListener('click', () => switchView('home'));
 $('#back-home-bottom').addEventListener('click', () => switchView('home'));
 $('#settings-open').addEventListener('click', () => switchView('settings'));

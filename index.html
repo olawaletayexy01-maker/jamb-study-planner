@@ -37,7 +37,18 @@
       <div class="progress-track" role="progressbar" aria-label="Subject completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="subject-progress-fill"></span></div>
       <div class="list-heading"><div><span class="mini-label">SYLLABUS CHECKLIST</span><h2>Topics to cover</h2></div><span id="topic-total" class="topic-pill"></span></div>
       <div id="topic-list" class="topic-list"></div>
+      <p class="practice-provenance">Practice questions written for this app, not official JAMB past questions.</p>
       <button class="back-home-bottom" id="back-home-bottom">← back to subjects</button>
+    </section>
+
+    <section id="quiz-view" class="view hidden" aria-labelledby="quiz-title">
+      <button class="back-link" id="quiz-back"><span aria-hidden="true">←</span> back to topics</button>
+      <div class="quiz-card">
+        <span class="mini-label" id="quiz-topic-label">TOPIC PRACTICE</span>
+        <h1 id="quiz-title">Practice quiz</h1>
+        <p class="practice-provenance">Practice questions written for this app, not official JAMB past questions.</p>
+        <div id="quiz-content" aria-live="polite"></div>
+      </div>
     </section>
 
     <section id="settings-view" class="view hidden" aria-labelledby="settings-title">
@@ -50,6 +61,7 @@
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="syllabus.js"></script>
+  <script src="questions.js"></script>
   <script src="app.js"></script>
   <script>if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));</script>
 </body>

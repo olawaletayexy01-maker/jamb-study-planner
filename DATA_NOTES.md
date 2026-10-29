@@ -12,3 +12,14 @@ The official IBASS portal and its published syllabus materials were queried for 
 Assumptions and limits: several checklist labels are concise paraphrases for usability, not JAMB's exact full syllabus wording. For English and Mathematics, some tasks combine multiple listed subtopics. This is not a claim that every note, objective, recommended text, or later syllabus amendment is included. Consult IBASS for the full and latest authoritative materials before relying on this checklist for exam preparation.
 
 The official syllabus documents and wording are JAMB materials. This project links to IBASS and includes limited headings/paraphrases for a personal study aid; it does not claim ownership of JAMB content or grant a license to redistribute official documents. The MIT license applies to the original application code only.
+
+## Practice question bank
+
+`questions.js` contains 60 original practice questions, with 5 MCQs each for these 12 topics:
+
+- English Language: Synonyms; Mood, tense, aspect, number and agreement/concord; Vowels: monophthongs, diphthongs and triphthongs.
+- Mathematics: Approximations, percentages, interest, profit and loss, shares and VAT; Simultaneous equations: linear pairs and one linear with one quadratic; Probability: experimental, addition and multiplication rules.
+- Physics: Measurements and Units; Motion: Newton’s laws, linear and relative motion, projectiles, circular motion and simple harmonic motion; Work, Energy and Power; Energy and Society.
+- Chemistry: Separation of Mixtures and Purification of Chemical Substances; Atomic Structure and Bonding; Acids, Bases and Salts.
+
+All other syllabus topics currently have no question set. A topic displays a Practice button only after it is marked studied and only when it has at least five questions. The quizzes are original topic-aligned practice written for this app, not official JAMB past questions and not copied from JAMB materials. Questions target core topic concepts, and are not a substitute for the full syllabus or exam-preparation materials.
