@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#124e3c">
+  <meta name="description" content="A simple offline-first JAMB UTME syllabus study planner.">
+  <title>JAMB Study Planner</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">skip to content</a>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="JAMB Study Planner home"><span class="brand-mark" aria-hidden="true">J</span><span>study<span class="brand-light">plan</span></span></a>
+    <div class="top-actions"><span id="connection-status" class="connection"><span class="status-dot"></span><span>online</span></span><button class="icon-button" id="settings-open" aria-label="Open settings" title="Settings">⚙</button></div>
+  </header>
+  <main id="main" tabindex="-1">
+    <section id="home-view" class="view" aria-labelledby="welcome-title">
+      <div class="hero">
+        <div class="eyebrow"><span class="eyebrow-line"></span> your UTME, one topic at a time</div>
+        <h1 id="welcome-title">Make your next<br><em>study session count.</em></h1>
+        <p class="hero-copy">Small, steady progress across your JAMB syllabus. Your checklist stays on this device, even offline.</p>
+        <div class="daily-card"><div><span class="mini-label">TODAY'S TARGET</span><strong id="today-progress">0 <span>/ 2 topics</span></strong></div><div class="target-icon" aria-hidden="true">✦</div><div class="daily-track" aria-hidden="true"><span id="daily-fill"></span></div></div>
+      </div>
+      <div class="section-heading"><div><span class="mini-label">YOUR SUBJECTS</span><h2>Pick up where you left off</h2></div><span class="subject-count" id="subject-count">04</span></div>
+      <div id="subject-grid" class="subject-grid" aria-label="Subjects"></div>
+      <section class="overall-card" aria-labelledby="overall-title"><div class="overall-top"><div><span class="mini-label">OVERALL PROGRESS</span><h2 id="overall-title">A little adds up.</h2></div><strong id="overall-percent">0%</strong></div><div class="overall-track" aria-hidden="true"><span id="overall-fill"></span></div><p id="overall-caption">0 of 0 syllabus topics studied</p></section>
+      <p class="footer-note"><span aria-hidden="true">◉</span> your progress is saved on this device</p>
+    </section>
+
+    <section id="subject-view" class="view hidden" aria-labelledby="subject-title">
+      <button class="back-link" id="back-home"><span aria-hidden="true">←</span> all subjects</button>
+      <div class="subject-head"><div class="subject-icon large" id="subject-icon" aria-hidden="true"></div><div><span class="mini-label" id="subject-code">SUBJECT</span><h1 id="subject-title"></h1></div></div>
+      <div class="subject-stats"><div><span class="mini-label">TOPICS STUDIED</span><strong id="subject-count-studied">0 <small>/ 0</small></strong></div><div><span class="mini-label">COMPLETION</span><strong id="subject-percent">0%</strong></div><div><span class="mini-label">STUDY STREAK</span><strong id="subject-streak">0 <small>days</small></strong></div></div>
+      <div class="progress-track" role="progressbar" aria-label="Subject completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="subject-progress-fill"></span></div>
+      <div class="list-heading"><div><span class="mini-label">SYLLABUS CHECKLIST</span><h2>Topics to cover</h2></div><span id="topic-total" class="topic-pill"></span></div>
+      <div id="topic-list" class="topic-list"></div>
+      <button class="back-home-bottom" id="back-home-bottom">← back to subjects</button>
+    </section>
+
+    <section id="settings-view" class="view hidden" aria-labelledby="settings-title">
+      <button class="back-link" id="settings-back"><span aria-hidden="true">←</span> dashboard</button>
+      <div class="settings-intro"><span class="mini-label">MAKE IT YOURS</span><h1 id="settings-title">Settings</h1><p>Set a target that fits your study routine.</p></div>
+      <div class="setting-card"><div><h2>Daily topic target</h2><p>How many topics do you want to study each day?</p></div><label class="target-input-label" for="daily-target">Topics per day</label><div class="stepper"><button id="target-minus" aria-label="Decrease daily topic target">−</button><input id="daily-target" type="number" min="1" max="20" value="2" inputmode="numeric"><button id="target-plus" aria-label="Increase daily topic target">+</button></div><span class="saved-note" id="target-saved" aria-live="polite">Saved on this device</span></div>
+      <div class="danger-card"><div><h2>Reset your progress</h2><p>Clear all topic checkmarks and study streaks. This cannot be undone.</p></div><button class="reset-button" id="reset-progress">Reset progress</button></div>
+      <p class="settings-foot">Your settings and progress are stored locally in this browser. Clearing browser data will remove them.</p>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="syllabus.js"></script>
+  <script src="app.js"></script>
+  <script>if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "JAMB Study Planner",
+  "short_name": "JAMB Planner",
+  "description": "Offline-first UTME syllabus checklist and study progress tracker.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8faf7",
+  "theme_color": "#124e3c",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
